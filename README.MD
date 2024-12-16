@@ -289,11 +289,126 @@ int main(int argc, char *argv[])
 
 ``` 
 
- #### C , C++ and many other programming high level langauges are not just about  C , C ++ but also require that you have knowledge of HTML , Bash , CSS , Javascript 
+
+
+
+ ### C , C++ and many other programming high level langauges are not just about  C , C ++ but also require that you have knowledge  of HTML , Bash , CSS , Javascript
+ ### Other important  aspects are  MakeFile and CMake 
+
+
 
  Its not just a case of learning C  or one singular langauge  it is very much an entire over view of many technologies now 
 
- 
+ ### Explanation of MAKFILE  Included in this repository 
+
+ ## This Makefile automates the compilation of a C program that depends on GTK+-3.0 libraries. Below is an explanation of each line:
+
+ The  Makefile automates the compilation of a C program that depends on GTK+-3.0 libraries. 
+ Below is an explanation of each line:
+
+ ### Variable definitions 
+
+``` 
+CC = gcc
+```
+- Sets the compiler to gcc (GNU C Compiler).
+
+``` 
+CFLAGS = \pkg-config --cflags gtk+-3.0` -rdynamic -g`
+```
+
+- CFLAGS specifies the compiler flags used during compilation:
+- `pkg-config --cflags gtk+-3.0`: Retrieves the necessary compiler flags for GTK+-3.0, such as include paths.
+- `rdynamic`: Ensures symbols are included in the binary for use with tools like dlopen.
+- `-g`: Enables debugging symbols in the output for use with debugging tools like gdb.
+
+
+``` 
+LIBS = pkg-config --libs gtk+-3.0
+
+```
+
+- Specifies the linker flags required for GTK+-3.0, such as linking the GTK+ libraries.
+  
+
+```
+SRCS = ServerGui.c
+```
+
+- Specifies the source files (.c files) for the project. In this case, there is one file: ServerGui.c.
+
+```
+OBJS = $(SRCS:.c=.o) 
+```
+
+- Converts the list of source files (.c) into a list of object files (.o) using Make's pattern substitution feature.
+- Here, ServerGui.c is converted to ServerGui.o.
+  
+```
+EXEC = Servercontol
+```
+- Specifies the name of the final executable file, Servercontol.
+
+## Rules i.e  How this compiles 
+
+``` 
+all: $(EXEC)
+```
+- Default target, executed when you run make. It depends on $(EXEC).
+- This ensures that the Servercontol executable will be built.
+
+```
+$(EXEC): $(OBJS)
+```
+- Defines how to build the executable Servercontol. It depends on the object files ($(OBJS)).
+
+- Command: $(CC) -o $(EXEC) $(OBJS) $(LIBS)
+    - $(CC): Compiler (gcc).
+    - -o $(EXEC): Specifies the output file name (Servercontol).
+    - $(OBJS): Includes the object files (e.g., ServerGui.o).
+    - $(LIBS): Links the required GTK+-3.0 libraries.
+  
+```
+%.o: %.c
+```
+- A pattern rule to build object files (.o) from source files (.c):
+    - `$(CC) $(CFLAGS) -c $< -o $@:`
+        - $<: The source file being compiled (e.g., ServerGui.c).
+        - $@: The target object file (e.g., ServerGui.o).
+        - $(CFLAGS): Adds the compiler flags (e.g., GTK+ include paths).
+  
+## Clean up 
+
+```
+clean:
+```
+- A special target to clean up the directory by removing all generated files.
+    - Command: rm -f $(EXEC) $(OBJS)
+        - rm -f: Force removal of the specified files.
+        - $(EXEC): Removes the executable (Servercontol).
+        - $(OBJS): Removes all object files (e.g., ServerGui.o).
+
+## How it all works The  actual make progress 
+
+- When you run `make`, it does the following 
+    - Checks the all target.
+    - Builds the $(EXEC) target by compiling the source file(s) to object file(s) using the pattern rule, then linking them into the final executable.
+
+- `make clean`
+    - Deletes the compiled executable and object files, allowing for a clean rebuild.
+  
+## Key Points to take  note of within MakeFile
+
+- `pkg-config` 
+- is used to manage GTK+-3.0 dependencies.
+- The file automates:
+    - Compilation of ServerGui.c into ServerGui.o.
+    - Linking of ServerGui.o into Servercontol using GTK+ libraries.
+
+- `Customization:` 
+-  You can add more source files to SRCS if needed, and Make will handle the rest for you  Hence  not just as case of learning the 
+langauges but also the tools  with which to build.  Notice also he requirement that you should also have knowledge of BASH 
+
  ## Enjoy and hope this provides  both  incite and intro into C , C++ 
 
  ### Thankyou  MD Harrington  London Kent DA6 8NP
